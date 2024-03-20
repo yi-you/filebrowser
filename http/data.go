@@ -7,11 +7,11 @@ import (
 
 	"github.com/tomasen/realip"
 
-	"github.com/filebrowser/filebrowser/v2/rules"
-	"github.com/filebrowser/filebrowser/v2/runner"
-	"github.com/filebrowser/filebrowser/v2/settings"
-	"github.com/filebrowser/filebrowser/v2/storage"
-	"github.com/filebrowser/filebrowser/v2/users"
+	"github.com/yi-you/filebrowser/v2/rules"
+	"github.com/yi-you/filebrowser/v2/runner"
+	"github.com/yi-you/filebrowser/v2/settings"
+	"github.com/yi-you/filebrowser/v2/storage"
+	"github.com/yi-you/filebrowser/v2/users"
 )
 
 type handleFunc func(w http.ResponseWriter, r *http.Request, d *data) (int, error)
@@ -66,11 +66,8 @@ func handle(fn handleFunc, prefix string, store *storage.Storage, server *settin
 			server:   server,
 		})
 
-		if status >= 400 || err != nil {
-			clientIP := realip.FromRequest(r)
-			log.Printf("%s: %v %s %v", r.URL.Path, status, clientIP, err)
-		}
-
+		clientIP := realip.FromRequest(r)
+		log.Printf("%s %s: %v %s %v", r.Method, r.URL.Path, status, clientIP, err)
 		if status != 0 {
 			txt := http.StatusText(status)
 			http.Error(w, strconv.Itoa(status)+" "+txt, status)
